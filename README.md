@@ -62,3 +62,9 @@ El juego utiliza el teléfono móvil como un objeto físico que debe circular de
 - **Playtesting de Saldo Insuficiente:** Probar el juego en reuniones reales para ajustar la fórmula matemática de los saldos ocultos iniciales y la duración óptima de las partidas.
 - **Volumen 02 (En desarrollo):** Ideación del próximo juego de la antología, explorando conceptos como "Autitos en la Gral. Paz" (enfocado en destreza y evasión infinita) o "Cajera del Fin del Mundo".
 - **Diseño de los Cartuchos Físicos:** Diagramación del fanzine térmico impreso final, incluyendo el mini-lore de cada juego, el bloque de código fuente impreso estéticamente, y su respectivo código QR.
+
+---
+
+## Agradecimientos
+
+- **Dante Bellini** ([@dantemepe](https://github.com/dantemepe)) — por el aporte conceptual y de diseño al fanzine.
