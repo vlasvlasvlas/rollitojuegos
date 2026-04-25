@@ -21,6 +21,10 @@ r=''
 p=0
 k=0
 l=1
+c=0
+re=''
+dt=''
+cf=''
 B=[
 '39 CHACA/BARRACAS 451',
 '60 CONST/TIGRE 472',
@@ -48,6 +52,67 @@ F=[
 ['(⌐■‿■)','(⌐■_■)','(⌐■︵■)'],
 ['( ⚆ ‿ ⚆ )','( ⚆ _ ⚆ )',
 '( ⚆ ︵ ⚆ )']]
+E=[
+'RECARGA EN EL CHINO',
+'SUBE TIRADA EN EL PISO',
+'KIOSCO DUDOSO',
+'PROMO RECARGA',
+'BILLETE EN EL BOLSILLO',
+'TE FIO TU AMIGO',
+'CARGASTE EN EL OBELISCO',
+'MAQUINA SE COMIO LA PLATA',
+'TARJETA DEL HERMANO',
+'SE CAYO EL SISTEMA',
+'PROMO 2X1 DEL BANCO',
+'PROPINA INESPERADA',
+'PERDISTE LA TARJETA',
+'RECARGA EN LA ESTACION',
+'TE PRESTO LA NOVIA',
+'LA ENCONTRO EN UN CAJERO',
+'TE CARGARON DE MAS',
+'RECARGA POR APP',
+'LA SUBE DEL VIEJO',
+'TARJETA DE COURIER']
+DC=[
+'A LA FACU',
+'AL LABURO',
+'AL CHINO',
+'A LO DE LA ABUELA',
+'AL HOSPITAL']
+DM=[
+'A UN CUMPLE',
+'AL ENSAYO',
+'A LO DE LA SUEGRA',
+'A UN PARTIDO',
+'AL TEATRO',
+'ASADO EN ZONA OESTE']
+DL=[
+'CASAMIENTO EN LA PLATA',
+'A EZEIZA',
+'ASADO EN PILAR',
+'RECITAL EN VTE LOPEZ',
+'AL FIN DEL MUNDO']
+CH=[
+'AL FONDO ATRAS',
+'ARRIBA VAMOS',
+'A VER SI HACEN LUGAR',
+'NO ME APUREN',
+'TENGO HORARIO',
+'NO TOQUEN EL TIMBRE',
+'CIERREN LA PUERTA',
+'BAJEN POR ATRAS',
+'AGUANTEN UN POCO',
+'YA ARRANCAMOS']
+N_=()=>{
+let j=Math.random()*3|0
+let X_=[DC,DM,DL][j]
+dt=X_[Math.random()*X_.length|0]
+c=[200+(Math.random()*200|0),
+400+(Math.random()*300|0),
+700+(Math.random()*400|0)][j]
+re=E[Math.random()*E.length|0]
+cf=CH[Math.random()*CH.length|0]
+}
 X=new RegExp(
 '(LEYENDO TARJETA|'+
 'OPERACION APROBADA|'+
@@ -85,15 +150,18 @@ if(m==1)s=[
 '1 PERSONA = 1 TOQUE',
 'PASAJEROS '+P.length,
 '','SI NADIE TOCA',
-'','ARRANCA EL BONDI']
+'','ARRANCA EL BONDI',
+'','EL CHOFER DICE',
+'"'+cf+'"']
 if(m==2)s=[
 k?'SUBIERON A':'',
 '',...R(),'',
 'VIAJE '+l,
+'VAN '+dt,
 'PASAJERO '+A[i][0]+
 ' / '+A.length,
 '',F[A[i][2]][0],'',
-'IMPORTE A PAGAR','',$(+g[2]),
+'IMPORTE A PAGAR','',$(c),
 '','APROXIME TARJETA','',
 ...H2,'',
 'APOYE TARJETA ACA',
@@ -113,10 +181,17 @@ if(m==5)s=[
 'GANASTE','','SALDO FINAL',
 $(A[0][1]),'',
 'TOQUE REINICIA']
-if(m==6)s=Array(12).fill(
-'▓'.repeat(p)+
+if(m==6){
+let P_='▓'.repeat(p)+
 ' '.repeat(38-p*2)+
-'▓'.repeat(p))
+'▓'.repeat(p)
+s=p>=18?[
+...Array(3).fill(P_),
+'','PARADA TECNICA','',
+re,'',
+...Array(3).fill(P_)]:
+Array(12).fill(P_)
+}
 document.body.innerHTML='<pre>'+
 Q(s).replace(X,
 '<span class=i>$1</span>')+
@@ -125,7 +200,7 @@ Q(s).replace(X,
 V=()=>{
 g=G()
 v=A[i]
-f=+g[2]+Math.random()*24-9
+f=c+Math.random()*24-9
 s=v[1]-f
 e=s<L
 n=e?0:(i+1)%A.length
@@ -186,6 +261,9 @@ else{
 if(r.includes('TRANSBORDO')){
 b=(b+1+(Math.random()*
 (B.length-1)|0))%B.length
+N_()
+A.forEach(p=>p[1]=
+Math.random()*2600-1100)
 l++
 k=1
 i%=A.length
@@ -197,6 +275,7 @@ D();return
 }
 m=1
 b=Math.random()*B.length|0
+N_()
 i=0
 l=1
 P=A=[]
@@ -206,7 +285,19 @@ Z=n=>{
 m=6;p=0;let d=2;D()
 y=setInterval(_=>{
 p+=d
-if(p>18){p=19;d=-2}
+if(p>18&&d>0){
+p=19;d=-2;D()
+clearInterval(y)
+setTimeout(_=>{
+y=setInterval(_=>{
+p+=d
+if(p<0){
+clearInterval(y);m=n;D()
+}else D()
+},40)
+},1800)
+return
+}
 if(p<0){
 clearInterval(y);m=n;D()
 }else D()
@@ -218,5 +309,6 @@ A=P.slice();k=1;Z(2)
 }
 }
 b=Math.random()*B.length|0
+N_()
 D()
 </script>
