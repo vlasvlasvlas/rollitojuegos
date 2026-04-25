@@ -1,0 +1,6 @@
+*.sh
+.claude/
+.DS_Store
+*.tmp
+*.log
+node_modules/

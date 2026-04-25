@@ -1,0 +1,222 @@
+<!doctype html>
+<meta name=viewport content=
+"width=device-width">
+<style>
+body{margin:0;min-height:100vh;
+font:15px/1.16 monospace}
+pre{width:40ch;margin:10px auto}
+.i{background:#000;color:#fff}
+</style>
+<body onpointerdown=T()>
+<pre></pre>
+<script>
+onkeydown=e=>m==1&&
+e.key=='Enter'?S():T()
+W=40
+L=-1200
+b=i=0
+m=1
+h=0
+r=''
+p=0
+k=0
+l=1
+B=[
+'39 CHACA/BARRACAS 451',
+'60 CONST/TIGRE 472',
+'68 ITALIA/SAAVEDRA 451',
+'86 BOCA/AEROPUERTO 498',
+'132 RETIRO/FLORES 451',
+'152 OLIVOS/BOCA 462',
+'343 LINIERS/TIGRE 510']
+P=[]
+A=[]
+H1=[
+' ___ _   _ ___ ___ ',
+'/ __| | | | _ ) __|',
+'\\__ \\ |_| | _ \\ _| ',
+'|___/\\___/|___/___|']
+H2=[
+' (((          ))) ',
+'  ((  [SUBE]  ))  ',
+'   (          )   ']
+F=[
+['(^.^)','(o.o)','(T.T)'],
+['[^_^]','[o_o]','[T_T]'],
+['(>v<)','(>_<)','(;_;)'],
+['(¬‿¬)','(¬_¬)','(¬︵¬)'],
+['(⌐■‿■)','(⌐■_■)','(⌐■︵■)'],
+['( ⚆ ‿ ⚆ )','( ⚆ _ ⚆ )',
+'( ⚆ ︵ ⚆ )']]
+X=new RegExp(
+'(LEYENDO TARJETA|'+
+'OPERACION APROBADA|'+
+'SALDO INSUFICIENTE|'+
+'APROXIME TARJETA|'+
+'TODOS PAGARON|'+
+'CAMBIO DE BONDI|'+
+'TRANSBORDO)','g')
+C=s=>{
+s=(s+'').slice(0,38)
+n=(38-s.length)/2|0
+return '|'+' '.repeat(n)+
+s.padEnd(38-n)+'|'
+}
+Q=a=>['+'+'-'.repeat(38)+'+',
+...a.map(C),
+'+'+'-'.repeat(38)+'+'].join`\n`
+$=v=>(v<0?'-$ ':'$ ')+
+Math.abs(v).toFixed(2)
+G=()=>B[b].split(' ')
+R=()=>[
+'    _____________',
+'    _/_|[][][][][] | - -',
+'  (      LINEA '+
+g[0].padEnd(4)+'| - -',
+'=--OO-------OO--=',
+g[1]]
+D=()=>{
+g=G()
+if(m==1)s=[
+'',...H1,'',
+'SALDO INSUFICIENTE','',
+'ROLLITO JUEGOS VOL.01','',
+'SUBAN AL BONDI','',
+'1 PERSONA = 1 TOQUE',
+'PASAJEROS '+P.length,
+'','SI NADIE TOCA',
+'','ARRANCA EL BONDI']
+if(m==2)s=[
+k?'SUBIERON A':'',
+'',...R(),'',
+'VIAJE '+l,
+'PASAJERO '+A[i][0]+
+' / '+A.length,
+'',F[A[i][2]][0],'',
+'IMPORTE A PAGAR','',$(+g[2]),
+'','APROXIME TARJETA','',
+...H2,'',
+'APOYE TARJETA ACA',
+'[ TOCAR / TECLA ]']
+if(m==3)s=[
+'LEYENDO TARJETA','',
+'!'.repeat((p%6)+1),
+F[A[i][2]][1],
+'!'.repeat((p%6)+1),'',
+'['+'#'.repeat(p)+
+'.'.repeat(20-p)+']',
+'',((p*5)+'%'),'',
+'NO RETIRE TARJETA']
+if(m==4)s=r
+if(m==5)s=[
+'ULTIMO CON SALDO','',
+'GANASTE','','SALDO FINAL',
+$(A[0][1]),'',
+'TOQUE REINICIA']
+if(m==6)s=Array(12).fill(
+'▓'.repeat(p)+
+' '.repeat(38-p*2)+
+'▓'.repeat(p))
+document.body.innerHTML='<pre>'+
+Q(s).replace(X,
+'<span class=i>$1</span>')+
+'</pre>'
+}
+V=()=>{
+g=G()
+v=A[i]
+f=+g[2]+Math.random()*24-9
+s=v[1]-f
+e=s<L
+n=e?0:(i+1)%A.length
+u=!e&&n==0&&A.length>1
+r=e?[
+'SALDO INSUFICIENTE','',
+F[v[2]][2],'',
+'ANTERIOR '+$(v[1]),
+'BOLETO '+$(f),
+'LIMITE -$ 1200.00','',
+'BAJATE',
+'QUEDAN '+(A.length-1),'',
+A.length<3?'FIN':'TRANSBORDO'
+]:u?[
+'OPERACION APROBADA','',
+F[v[2]][0],'',
+'BOLETO '+$(f),
+'SALDO '+$(s),
+'','TODOS PAGARON',
+'CAMBIO DE BONDI','TRANSBORDO'
+]:[
+'OPERACION APROBADA','',
+F[v[2]][0],'',
+'BOLETO '+$(f),
+'SALDO '+$(s),
+'','PASE EL CELULAR']
+if(e){
+A.splice(i,1)
+if(A.length)i%=A.length
+}else{v[1]=s;i=n}
+m=4
+D()
+}
+T=()=>{
+if(m==1){
+P.push([P.length+1,
+Math.random()*2600-1100,
+P.length%F.length])
+D()
+if(h)clearTimeout(h)
+h=setTimeout(S,1500)
+return
+}
+if(m==2){
+k=0;m=3;p=0;D()
+y=setInterval(_=>{
+p++
+D()
+if(p>19){
+clearInterval(y);V()}
+},100)
+return
+}
+if(m==3||m==6)return
+if(m==4){
+if(A.length<2)m=5
+else{
+if(r.includes('TRANSBORDO')){
+b=(b+1+(Math.random()*
+(B.length-1)|0))%B.length
+l++
+k=1
+i%=A.length
+return Z(2)
+}
+m=2
+}
+D();return
+}
+m=1
+b=Math.random()*B.length|0
+i=0
+l=1
+P=A=[]
+Z(1)
+}
+Z=n=>{
+m=6;p=0;let d=2;D()
+y=setInterval(_=>{
+p+=d
+if(p>18){p=19;d=-2}
+if(p<0){
+clearInterval(y);m=n;D()
+}else D()
+},40)
+}
+S=()=>{
+if(m==1&&P.length>1){
+A=P.slice();k=1;Z(2)
+}
+}
+b=Math.random()*B.length|0
+D()
+</script>
