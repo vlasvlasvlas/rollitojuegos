@@ -1,5 +1,12 @@
 # Rollito Juegos: Fanzine de Software Térmico
 
+> ## ▶ [JUGAR ONLINE](https://vlasvlasvlas.github.io/rollitojuegos/)
+>
+> - **Catálogo del fanzine:** https://vlasvlasvlas.github.io/rollitojuegos/
+> - **Vol. 01 — Saldo Insuficiente:** https://vlasvlasvlas.github.io/rollitojuegos/saldo_insuficiente.html
+>
+> Probalo desde el celular, hace falta tocar la pantalla para que arranque (los browsers requieren un toque para activar el audio).
+
 **Rollito Juegos** es una antología colaborativa de minijuegos diseñados bajo las restricciones de una impresora térmica de punto de venta (POS) y la estética clásica de los fanzines. 
 
 Inspirados en las revistas de programación de los años 80, donde el código fuente venía impreso en papel para que el lector lo tipeara y jugara en su casa, esta línea editorial retoma esa tradición pero adaptada a la inmediatez moderna: el juego se imprime en un recibo térmico con su código fuente visible como obra estética, acompañado de un **código QR** que permite escanearlo y jugarlo instantáneamente en cualquier celular.
