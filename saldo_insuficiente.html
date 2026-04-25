@@ -73,27 +73,30 @@ J=[
 ['( ⚆ ‿ ⚆ )','\\( ⚆ o ⚆ )/',
 '( ⚆ _ ⚆ )','( ⚆ o ⚆ )']]
 wp=0
-E=[
-'RECARGA EN EL CHINO',
+EP=[
 'SUBE TIRADA EN EL PISO',
-'KIOSCO DUDOSO',
 'PROMO RECARGA',
-'BILLETE EN EL BOLSILLO',
-'TE FIO TU AMIGO',
-'CARGASTE EN EL OBELISCO',
-'MAQUINA SE COMIO LA PLATA',
-'TARJETA DEL HERMANO',
-'SE CAYO EL SISTEMA',
+'BILLETES EN EL BOLSILLO',
+'UN AMIGO LES PRESTA',
 'PROMO 2X1 DEL BANCO',
-'PROPINA INESPERADA',
-'PERDISTE LA TARJETA',
+'PROPINAS INESPERADAS',
+'LA NOVIA PASA LA SUBE',
+'ENCONTRARON UN CAJERO',
+'LES CARGARON DE MAS']
+E0=[
+'RECARGA EN EL CHINO',
+'CARGARON EN EL OBELISCO',
+'TARJETAS DEL HERMANO',
 'RECARGA EN LA ESTACION',
-'TE PRESTO LA NOVIA',
-'LA ENCONTRO EN UN CAJERO',
-'TE CARGARON DE MAS',
 'RECARGA POR APP',
-'LA SUBE DEL VIEJO',
+'PASAN LA SUBE DEL VIEJO',
 'TARJETA DE COURIER']
+EM=[
+'KIOSCO DUDOSO',
+'MAQUINA SE COMIO LA PLATA',
+'SE CAYO EL SISTEMA',
+'PERDIERON LA TARJETA']
+es=0
 DC=[
 'A LA FACU',
 'AL LABURO',
@@ -158,7 +161,10 @@ dt=X_[Math.random()*X_.length|0]
 c=[200+(Math.random()*200|0),
 400+(Math.random()*300|0),
 700+(Math.random()*400|0)][j]
-re=E[Math.random()*E.length|0]
+let kE=Math.random()*3|0
+let EX=[EP,E0,EM][kE]
+re=EX[Math.random()*EX.length|0]
+es=kE==0?1:kE==2?-1:0
 cf=CH[Math.random()*CH.length|0]
 }
 X=new RegExp(
@@ -325,9 +331,14 @@ let pri=!ac
 if(pri){
 ac=new(AudioContext||
 webkitAudioContext)()
+ac.resume&&ac.resume()
 M(LM,400)
-}else N(1200,.025,
+}else{
+ac.state=='suspended'&&
+ac.resume()
+N(1200,.025,
 'triangle',.015)
+}
 if(m==1){
 if(!pri)N(660,.05)
 P.push([P.length+1,
@@ -404,7 +415,8 @@ b=(b+1+(Math.random()*
 (B.length-1)|0))%B.length
 N_()
 A.forEach(p=>p[1]+=
-(Math.random()*600|0)-300)
+es?es*(200+(Math.random()*400|0)):
+(Math.random()*400|0)-200)
 l++
 k=1
 i%=A.length
