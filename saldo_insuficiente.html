@@ -64,6 +64,15 @@ F=[
 ['(⌐■‿■)','(⌐■_■)','(⌐■︵■)'],
 ['( ⚆ ‿ ⚆ )','( ⚆ _ ⚆ )',
 '( ⚆ ︵ ⚆ )']]
+J=[
+['(^.^)','\\(^o^)/','(o.o)','(^o^)'],
+['[^_^]','\\[^o^]/','[o_o]','[^o^]'],
+['(>v<)','\\(>o<)/','(o_o)','(>o<)'],
+['(¬‿¬)','\\(¬o¬)/','(¬_¬)','(^‿^)'],
+['(⌐■‿■)','\\(⌐■o■)/','(⌐■_■)','(⌐■o■)'],
+['( ⚆ ‿ ⚆ )','\\( ⚆ o ⚆ )/',
+'( ⚆ _ ⚆ )','( ⚆ o ⚆ )']]
+wp=0
 E=[
 'RECARGA EN EL CHINO',
 'SUBE TIRADA EN EL PISO',
@@ -240,8 +249,8 @@ if(m==4)s=r
 if(m==5)s=[
 'ULTIMO CON SALDO','',
 'GANASTE','',
-'PASAJERO '+A[0][0],
-F[A[0][2]][0],'',
+'PASAJERO '+A[0][0],'',
+J[A[0][2]][wp%4],'',
 'SALDO FINAL',
 $(A[0][1]),'',
 'TOQUE REINICIA']
@@ -382,6 +391,9 @@ if(m==4){
 if(A.length<2){
 m=5
 M(LMV,280)
+wp=0
+y=setInterval(_=>{
+wp++;D()},250)
 }
 else{
 if(r.includes('TRANSBORDO')){
@@ -402,6 +414,7 @@ m=2
 }
 D();return
 }
+if(y)clearInterval(y)
 m=1
 b=Math.random()*B.length|0
 N_()
