@@ -25,6 +25,8 @@ c=0
 re=''
 dt=''
 cf=''
+q=0
+ac=0
 B=[
 '39 CHACA/BARRACAS 451',
 '60 CONST/TIGRE 472',
@@ -103,6 +105,33 @@ CH=[
 'BAJEN POR ATRAS',
 'AGUANTEN UN POCO',
 'YA ARRANCAMOS']
+LM=[
+[392,.35],[392,.35],
+[440,.4],[523,.55],
+[523,.35],[494,.35],
+[440,.4],[392,.7]]
+LMV=[
+[523,.25],[587,.25],
+[659,.25],[698,.3],
+[784,.45],[784,.25],
+[880,.3],[1047,.7]]
+AP=[[523,.1],[659,.1],[784,.15]]
+RJ=[[440,.1],[349,.1],[294,.2]]
+N=(f,d,t='square',v=.04)=>{
+if(!ac)return
+let o=ac.createOscillator()
+let g=ac.createGain()
+o.type=t
+o.frequency.value=f
+g.gain.value=v
+o.connect(g)
+.connect(ac.destination)
+o.start()
+o.stop(ac.currentTime+d)
+}
+M=(ns,sp=120)=>ns.forEach(
+(n,i)=>setTimeout(
+_=>N(n[0],n[1]),i*sp))
 N_=()=>{
 let j=Math.random()*3|0
 let X_=[DC,DM,DL][j]
@@ -178,7 +207,10 @@ F[A[i][2]][1],
 if(m==4)s=r
 if(m==5)s=[
 'ULTIMO CON SALDO','',
-'GANASTE','','SALDO FINAL',
+'GANASTE','',
+'PASAJERO '+A[0][0],
+F[A[0][2]][0],'',
+'SALDO FINAL',
 $(A[0][1]),'',
 'TOQUE REINICIA']
 if(m==6){
@@ -186,10 +218,11 @@ let P_='▓'.repeat(p)+
 ' '.repeat(38-p*2)+
 '▓'.repeat(p)
 s=p>=18?[
-...Array(3).fill(P_),
-'','PARADA TECNICA','',
+...Array(2).fill(P_),
+'','RECARGANDO SUBE','',
 re,'',
-...Array(3).fill(P_)]:
+q?'TOQUE PARA SUBIR':'','',
+...Array(2).fill(P_)]:
 Array(12).fill(P_)
 }
 document.body.innerHTML='<pre>'+
@@ -203,6 +236,7 @@ v=A[i]
 f=c+Math.random()*24-9
 s=v[1]-f
 e=s<L
+M(e?RJ:AP,e?100:80)
 n=e?0:(i+1)%A.length
 u=!e&&n==0&&A.length>1
 r=e?[
@@ -235,7 +269,15 @@ m=4
 D()
 }
 T=()=>{
+let pri=!ac
+if(pri){
+ac=new(AudioContext||
+webkitAudioContext)()
+M(LM,400)
+}else N(1200,.025,
+'triangle',.015)
 if(m==1){
+if(!pri)N(660,.05)
 P.push([P.length+1,
 Math.random()*2600-1100,
 P.length%F.length])
@@ -245,20 +287,32 @@ h=setTimeout(S,1500)
 return
 }
 if(m==2){
+N(110,.08)
 k=0;m=3;p=0;D()
 y=setInterval(_=>{
 p++
+N(220+p*30,.04)
 D()
 if(p>19){
 clearInterval(y);V()}
 },100)
 return
 }
-if(m==3||m==6)return
+if(m==6){
+if(q)q()
+return
+}
+if(m==3)return
 if(m==4){
-if(A.length<2)m=5
+if(A.length<2){
+m=5
+M(LMV,280)
+}
 else{
 if(r.includes('TRANSBORDO')){
+N(220,.25,'sawtooth')
+setTimeout(_=>M(
+[[330,.1],[440,.15]],120),300)
 b=(b+1+(Math.random()*
 (B.length-1)|0))%B.length
 N_()
@@ -286,16 +340,18 @@ m=6;p=0;let d=2;D()
 y=setInterval(_=>{
 p+=d
 if(p>18&&d>0){
-p=19;d=-2;D()
+p=19;d=-2
 clearInterval(y)
-setTimeout(_=>{
+q=()=>{
+q=0;D()
 y=setInterval(_=>{
 p+=d
 if(p<0){
 clearInterval(y);m=n;D()
 }else D()
 },40)
-},1800)
+}
+D()
 return
 }
 if(p<0){
