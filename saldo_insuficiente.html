@@ -182,7 +182,8 @@ X=new RegExp(
 'TRANSBORDO|'+
 'SOS ESTUDIANTE|'+
 'CHOFER COBRO MENOS|'+
-'VIAJE MAS LARGO)','g')
+'VIAJE MAS LARGO|'+
+'GANASTE)','g')
 C=s=>{
 s=(s+'').slice(0,38)
 n=(38-s.length)/2|0
@@ -268,6 +269,7 @@ s=p>=18?[
 ...Array(2).fill(P_),
 '','RECARGANDO SUBE','',
 re,'',
+es>0?':-)':es<0?':-(':' ','',
 q?'TOQUE PARA SUBIR':'','',
 ...Array(2).fill(P_)]:
 Array(12).fill(P_)
