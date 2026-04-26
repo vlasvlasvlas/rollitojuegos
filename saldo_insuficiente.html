@@ -3,20 +3,22 @@
 "width=device-width">
 <style>
 body{margin:0;min-height:100vh;
-font:15px/1.16 monospace}
+font:15px/1.16 monospace;
+touch-action:manipulation;
+-webkit-user-select:none;
+user-select:none;
+-webkit-touch-callout:none}
 pre{width:40ch;margin:10px auto}
 .i{background:#000;color:#fff}
 .b{color:#1bf;font-weight:700}
 </style>
-<body onpointerdown=T()>
+<body>
 <pre></pre>
 <script>
-onkeydown=e=>m==1&&
-e.key=='Enter'?S():T()
 W=40
 L=-1200
 b=i=0
-m=1
+m=0
 h=0
 r=''
 p=0
@@ -37,6 +39,8 @@ OK=8
 hit=0
 nf=0
 TM=0
+pT=0
+lT=0
 B=[
 '39 CHACA/BARRACAS 451',
 '60 CONST/TIGRE 472',
@@ -177,7 +181,7 @@ X=new RegExp(
 'OPERACION APROBADA|'+
 'SALDO INSUFICIENTE|'+
 'APROXIME TARJETA|'+
-'TODOS PAGARON|'+
+'TODES PAGARON|'+
 'CAMBIO DE BONDI|'+
 'TRANSBORDO|'+
 'MM SOS ESTUDIANTE\\? OK|'+
@@ -205,17 +209,28 @@ g[0].padEnd(4)+'| - -',
 g[1]]
 D=()=>{
 g=G()
-if(m==1)s=[
+if(m==0)s=[
 '','ROLLITO JUEGOS VOL.01','',
 ...H1,'',
 'SALDO INSUFICIENTE','',
+'─'.repeat(34),'','',
+'MANTENE PRESIONADO','',
+'PARA SUBIR AL BONDI','',
 '─'.repeat(34),'',
-'SUBAN AL BONDI','',
-'1 PERSONA = 1 TOQUE','',
-'PASAJEROS A BORDO',
-'‹ '+P.length+' ›',
-'','SI NADIE TOCA',
-'','ARRANCA EL BONDI']
+'EN PC: ENTER O ESPACIO']
+if(m==1)s=[
+'','LOBBY DEL BONDI','',
+'─'.repeat(34),'',
+'PASAJERES A BORDO',
+'‹ '+P.length+' ›','',
+...P.map((p,idx)=>
+'PASAJERX '+(idx+1)+'  '+
+F[p[2]][0]),'',
+'─'.repeat(34),'',
+'MANTENE PRESIONADO',
+'PARA SUMARSE','',
+'SI NO SE SUMA NADIE MAS',
+'ARRANCA EL BONDI']
 if(m==2)s=[
 k?'SUBIERON A':'',
 '',...R(),'',
@@ -223,7 +238,7 @@ k?'SUBIERON A':'',
 '‹ VIAJE '+l+' ›',
 'VAN '+dt,'',
 '─'.repeat(34),'',
-'«PASAJERO '+A[i][0]+
+'«PASAJERX '+A[i][0]+
 ' / '+A.length+'»','',
 '',F[A[i][2]][0],'','',
 '‹ SALDO '+$(A[i][1])+' ›','',
@@ -254,9 +269,9 @@ hit?'':'[ TOCAR / TECLA ]']
 }
 if(m==4)s=r
 if(m==5)s=[
-'ULTIMO CON SALDO','',
+'ULTIMX CON SALDO','',
 'GANASTE','',
-'PASAJERO '+A[0][0],'',
+'PASAJERX '+A[0][0],'',
 J[A[0][2]][wp%4],'',
 'SALDO FINAL',
 $(A[0][1]),'',
@@ -303,7 +318,7 @@ zM,'',
 'ANTERIOR '+$(v[1]),
 'BOLETO '+$(f),
 'LIMITE -$ 1200.00','',
-'BAJATE PASAJERO '+v[0],
+'BAJATE PASAJERX '+v[0],
 'QUEDAN '+(A.length-1),'',
 A.length<3?'FIN':'TRANSBORDO'
 ]:u?[
@@ -312,7 +327,7 @@ F[v[2]][0],'',
 zM,'',
 'BOLETO '+$(f),
 'SALDO '+$(s),
-'','TODOS PAGARON',
+'','TODES PAGARON',
 'CAMBIO DE BONDI','TRANSBORDO'
 ]:[
 'OPERACION APROBADA','',
@@ -328,6 +343,26 @@ if(A.length)i%=A.length
 m=4
 D()
 }
+LP=()=>{
+let pri=!ac
+if(pri){
+ac=new(AudioContext||
+webkitAudioContext)()
+ac.resume&&ac.resume()
+M(LM,400)
+}else{
+ac.state=='suspended'&&
+ac.resume()
+N(660,.05)
+}
+P.push([P.length+1,
+1300+(Math.random()*400|0),
+P.length%F.length])
+if(m==0)m=1
+D()
+if(h)clearTimeout(h)
+h=setTimeout(S,2500)
+}
 T=()=>{
 let pri=!ac
 if(pri){
@@ -340,16 +375,6 @@ ac.state=='suspended'&&
 ac.resume()
 N(1200,.025,
 'triangle',.015)
-}
-if(m==1){
-if(!pri)N(660,.05)
-P.push([P.length+1,
-1300+(Math.random()*400|0),
-P.length%F.length])
-D()
-if(h)clearTimeout(h)
-h=setTimeout(S,1500)
-return
 }
 if(m==2){
 N(110,.08)
@@ -429,7 +454,7 @@ m=2
 D();return
 }
 if(y)clearInterval(y)
-m=1
+m=0
 b=Math.random()*B.length|0
 N_()
 i=0
@@ -465,6 +490,27 @@ S=()=>{
 if(m==1&&P.length>1){
 A=P.slice();k=1;Z(2)
 }
+}
+onpointerdown=()=>{
+if(m<2){
+pT=Date.now()
+lT=setTimeout(LP,600)
+return
+}
+T()
+}
+onpointerup=()=>{
+if(lT){clearTimeout(lT);lT=0}
+pT=0
+}
+onpointercancel=()=>{
+if(lT){clearTimeout(lT);lT=0}
+pT=0
+}
+onkeydown=e=>{
+if(m==1&&e.key=='Enter'
+&&P.length>1)return S()
+m<2?LP():T()
 }
 b=Math.random()*B.length|0
 N_()

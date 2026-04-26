@@ -1,0 +1,245 @@
+# Rollito Juegos / Vol 01 - SALDO INSUFICIENTE
+# ============================================
+# Configuracion narrativa y de balance.
+# Editar libremente este archivo para ajustar tono y dificultad.
+# El HTML lo lee al cargar (pendiente de implementacion).
+
+
+# -------- BALANCE NUMERICO --------
+balance:
+  # Saldo con el que arranca cada pasajero (random entre min y max)
+  saldo_inicial:
+    min: 1300
+    max: 1700
+
+  # Piso del credito SUBE: si el saldo cae debajo de esto, te bajan del bondi
+  piso_saldo: -1200
+
+  # Minijuego "PEGALE EN LA RANURA"
+  minijuego:
+    zona_perfect_base: 3       # antes 4 - mas chico = mas dificil
+    zona_ok_base: 6            # antes 8 - mas chico = mas dificil
+    velocidad_base: 1.0        # antes 0.85 - mas rapido
+    velocidad_x_nivel: 0.2     # antes 0.15 - escala mas rapido
+    timeout_pasadas: 2.5       # cuantas pasadas alcanza la paciencia del chofer
+
+  # Multiplicadores del boleto segun resultado del minijuego
+  multiplicadores_boleto:
+    perfect: 0.65   # antes 0.5 - perfect ya no te salva tanto
+    ok: 0.95        # antes 0.85
+    miss: 1.5       # antes 1.3 - un miss se siente
+
+
+# -------- EVENTOS DE TRANSBORDO --------
+# Cada evento aplica el mismo monto a TODOS los sobrevivientes.
+# El monto se sortea dentro del rango y se muestra explicito en pantalla.
+eventos:
+  # Probabilidad de que salga cada categoria
+  probabilidad:
+    positivo: 0.30
+    neutro: 0.35
+    negativo: 0.35
+
+  positivos:
+    - texto: "SUBE TIRADA EN EL PISO"
+      monto: [100, 300]
+    - texto: "ENCONTRARON UN BILLETE"
+      monto: [100, 300]
+    - texto: "AMIGUE LES FIA"
+      monto: [100, 250]
+    - texto: "PROMO RECARGA"
+      monto: [150, 300]
+    - texto: "PROPINAS INESPERADAS"
+      monto: [100, 250]
+    - texto: "VECINX LES PASA LA SUBE"
+      monto: [100, 300]
+    - texto: "PROMO 2X1 BANCO"
+      monto: [150, 300]
+    - texto: "LES CARGARON DE MAS"
+      monto: [100, 300]
+
+  neutros:
+    - texto: "RECARGA EN EL CHINO"
+      monto: [-150, 150]
+    - texto: "RECARGA POR APP"
+      monto: [-100, 100]
+    - texto: "RECARGA EN LA ESTACION"
+      monto: [-100, 100]
+    - texto: "CARGAN EN UN KIOSCO"
+      monto: [-150, 100]
+    - texto: "TARJETA COMPARTIDA"
+      monto: [-100, 100]
+    - texto: "TARJETA DE COURIER"
+      monto: [-100, 150]
+
+  negativos:
+    - texto: "KIOSCO DUDOSO"
+      monto: [-600, -300]
+    - texto: "MAQUINA SE COMIO LA PLATA"
+      monto: [-700, -400]
+    - texto: "SE CAYO EL SISTEMA"
+      monto: [-500, -300]
+    - texto: "PERDIERON LA TARJETA"
+      monto: [-700, -400]
+    - texto: "AUMENTO SORPRESIVO"
+      monto: [-600, -300]
+    - texto: "BOLETO DUPLICADO POR ERROR"
+      monto: [-500, -300]
+
+
+# -------- VOZ DEL CHOFER --------
+# Frases sueltas que dice el chofer (aparecen en transiciones)
+frases_chofer:
+  - "AL FONDO ATRAS"
+  - "ARRIBA VAMOS"
+  - "A VER SI HACEN LUGAR"
+  - "NO ME APUREN"
+  - "TENGO HORARIO"
+  - "NO TOQUEN EL TIMBRE"
+  - "CIERREN LA PUERTA"
+  - "BAJEN POR ATRAS"
+  - "AGUANTEN UN POCO"
+  - "YA ARRANCAMOS"
+
+# Veredicto del chofer al validar la SUBE en el minijuego
+veredicto_chofer:
+  perfect: "MM SOS ESTUDIANTE? OK"
+  ok: "CHOFER COBRO MENOS"
+  miss: "VIAJE MAS LARGO"
+
+
+# -------- CARITAS / KAOMOJIS --------
+# Cada pasajero recibe una carita al subir. Tres estados: feliz, duda, triste.
+# (Lista actual - todavia hay que diferenciarlas mas, pendiente)
+caritas:
+  - feliz: "(^.^)"
+    duda: "(o.o)"
+    triste: "(T.T)"
+  - feliz: "[^_^]"
+    duda: "[o_o]"
+    triste: "[T_T]"
+  - feliz: "(>v<)"
+    duda: "(>_<)"
+    triste: "(;_;)"
+  - feliz: "(¬‿¬)"
+    duda: "(¬_¬)"
+    triste: "(¬︵¬)"
+  - feliz: "(⌐■‿■)"
+    duda: "(⌐■_■)"
+    triste: "(⌐■︵■)"
+  - feliz: "( ⚆ ‿ ⚆ )"
+    duda: "( ⚆ _ ⚆ )"
+    triste: "( ⚆ ︵ ⚆ )"
+
+
+# -------- LINEAS DE BONDI --------
+# Lineas reales de la AMBA. Formato: "NUMERO RECORRIDO INTERNO"
+bondis:
+  - "39 CHACA/BARRACAS 451"
+  - "60 CONST/TIGRE 472"
+  - "68 ITALIA/SAAVEDRA 451"
+  - "86 BOCA/AEROPUERTO 498"
+  - "132 RETIRO/FLORES 451"
+  - "152 OLIVOS/BOCA 462"
+  - "343 LINIERS/TIGRE 510"
+
+
+# -------- MISIONES --------
+# Cada partida sortea una mision. La partida tiene 6 tramos secuenciales.
+# Cada tramo es un nivel: todos los pasajeros vivos pagan su SUBE en orden.
+# Si caes en un tramo, te quedas en ese lugar geografico (el cartel lo nombra).
+# Llegar al ultimo tramo = victoria.
+#
+# Placeholders en finales:
+#   {N} = cantidad que llego
+#   {TOTAL} = cantidad inicial
+#   {NOMBRE} = numero del pasajero ganador (ej: "PASAJERO 3")
+#   {LUGAR} = nombre del tramo donde se cayo el pasajero
+misiones:
+
+  - id: 1
+    nombre: "VOLVER A CASA"
+    intro: "se cruzaron volviendo del laburo. comparten el bondi de vuelta al barrio."
+    destino_final: "EL BARRIO"
+    finales:
+      todes: "LLEGARON ENTERES AL BARRIO"
+      mayoria: "LLEGARON {N} DE {TOTAL}. EL RESTO QUEDO EN EL CAMINO"
+      uno: "{NOMBRE} LLEGO SOLE A SU CASA"
+      ninguno: "NADIE VOLVIO HOY"
+    tramos:
+      - lugar: "CENTRO"
+        narrativa: "EL BONDI SALE REPLETO"
+        rango_costo: [200, 400]
+      - lugar: "ABASTO"
+        narrativa: "MAS GENTE SUBE EN EL ABASTO"
+        rango_costo: [250, 450]
+      - lugar: "ALMAGRO"
+        narrativa: "ATRAVIESAN MEDRANO"
+        rango_costo: [300, 500]
+      - lugar: "PRIMERA JUNTA"
+        narrativa: "TRANSBORDO EN PRIMERA JUNTA"
+        rango_costo: [350, 550]
+      - lugar: "FLORES"
+        narrativa: "AVENIDA RIVADAVIA, CASI EN CASA"
+        rango_costo: [350, 600]
+      - lugar: "EL BARRIO"
+        narrativa: "ULTIMA CUADRA, BAJAN"
+        rango_costo: [200, 400]
+
+  - id: 2
+    nombre: "A LA MARCHA"
+    intro: "hoy hay marcha en el centro. todes van juntes."
+    destino_final: "PLAZA DE MAYO"
+    finales:
+      todes: "LLEGARON ENTERES A LA PLAZA"
+      mayoria: "LLEGARON {N} DE {TOTAL}. EL RESTO NO HIZO LA MARCHA"
+      uno: "{NOMBRE} LLEGO SOLE A LA PLAZA"
+      ninguno: "LA MARCHA SIGUIO SIN ELLES"
+    tramos:
+      - lugar: "PLAZA DEL BARRIO"
+        narrativa: "PUNTO DE ENCUENTRO"
+        rango_costo: [200, 400]
+      - lugar: "AVENIDA PRINCIPAL"
+        narrativa: "PRIMERA COMBINACION"
+        rango_costo: [300, 500]
+      - lugar: "ENTRE RIOS"
+        narrativa: "EL BONDI SE LLENA DE GENTE"
+        rango_costo: [350, 600]
+      - lugar: "CONGRESO"
+        narrativa: "CONCENTRACION FRENTE AL CONGRESO"
+        rango_costo: [400, 700]
+      - lugar: "AVENIDA DE MAYO"
+        narrativa: "LA MARCHA AVANZA"
+        rango_costo: [400, 700]
+      - lugar: "PLAZA DE MAYO"
+        narrativa: "LLEGADA, CONCENTRACION FINAL"
+        rango_costo: [300, 500]
+
+  - id: 3
+    nombre: "AL RECITAL"
+    intro: "hay banda barrial esta noche. el grupo va a verla."
+    destino_final: "LA SALA"
+    finales:
+      todes: "ENTRARON ENTERES AL RECITAL"
+      mayoria: "ENTRARON {N} DE {TOTAL}. EL RESTO SE PERDIO EL SHOW"
+      uno: "{NOMBRE} VIO LA BANDA SOLE"
+      ninguno: "LA BANDA TOCO SIN PUBLICO"
+    tramos:
+      - lugar: "EL BARRIO"
+        narrativa: "SALIDA TEMPRANA, BUSCAN AL GRUPO"
+        rango_costo: [200, 400]
+      - lugar: "SCALABRINI ORTIZ"
+        narrativa: "TRANSBORDO"
+        rango_costo: [300, 500]
+      - lugar: "AVENIDA CORRIENTES"
+        narrativa: "BONDI LLENO DE GENTE QUE VA AL CENTRO"
+        rango_costo: [400, 600]
+      - lugar: "EL BAJO"
+        narrativa: "ATRAVIESAN EL BAJO"
+        rango_costo: [400, 700]
+      - lugar: "AVELLANEDA"
+        narrativa: "BARRIO DE LA SALA"
+        rango_costo: [350, 600]
+      - lugar: "LA SALA"
+        narrativa: "PUERTA DEL RECITAL"
+        rango_costo: [200, 400]
