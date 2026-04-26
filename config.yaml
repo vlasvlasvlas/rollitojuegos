@@ -5,6 +5,15 @@
 # El HTML lo lee al cargar (pendiente de implementacion).
 
 
+# -------- UX / GESTOS --------
+# Knobs de interaccion. El HTML mirrorea estos valores.
+ux:
+  hold_ms: 1000           # cuanto hay que sostener para confirmar accion
+                          # (sweet spot 1000-2000 con feedback visual)
+  autostart_ms: 3500      # ms despues del ultimo hold antes de arrancar solo
+  doubletap_ms: 350       # ventana para detectar doble toque
+
+
 # -------- BALANCE NUMERICO --------
 balance:
   # Saldo con el que arranca cada pasajero (random entre min y max)
