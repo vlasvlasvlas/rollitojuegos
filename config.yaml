@@ -22,7 +22,7 @@ balance:
     max: 1700
 
   # Piso del credito SUBE: si el saldo cae debajo de esto, te bajan del bondi
-  piso_saldo: -1200
+  piso_saldo: -1000
 
   # Minijuego "PEGALE EN LA RANURA"
   minijuego:
