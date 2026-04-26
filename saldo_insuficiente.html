@@ -78,29 +78,35 @@ J=[
 '( ⚆ _ ⚆ )','( ⚆ o ⚆ )']]
 wp=0
 EP=[
-'SUBE TIRADA EN EL PISO',
-'PROMO RECARGA',
-'BILLETES EN EL BOLSILLO',
-'UN AMIGO LES PRESTA',
-'PROMO 2X1 DEL BANCO',
-'PROPINAS INESPERADAS',
-'LA NOVIA PASA LA SUBE',
-'ENCONTRARON UN CAJERO',
-'LES CARGARON DE MAS']
+['SUBE TIRADA EN EL PISO',100,300],
+['ENCONTRARON UN BILLETE',100,300],
+['AMIGUE LES FIA',100,250],
+['PROMO RECARGA',150,300],
+['PROPINAS INESPERADAS',100,250],
+['VECINX LES PASA LA SUBE',100,300],
+['PROMO 2X1 BANCO',150,300],
+['LES CARGARON DE MAS',100,300]]
 E0=[
-'RECARGA EN EL CHINO',
-'CARGARON EN EL OBELISCO',
-'TARJETAS DEL HERMANO',
-'RECARGA EN LA ESTACION',
-'RECARGA POR APP',
-'PASAN LA SUBE DEL VIEJO',
-'TARJETA DE COURIER']
+['RECARGA EN EL CHINO',-150,150],
+['RECARGA POR APP',-100,100],
+['RECARGA EN LA ESTACION',-100,100],
+['CARGAN EN UN KIOSCO',-150,100],
+['TARJETA COMPARTIDA',-100,100],
+['TARJETA DE COURIER',-100,150]]
 EM=[
-'KIOSCO DUDOSO',
-'MAQUINA SE COMIO LA PLATA',
-'SE CAYO EL SISTEMA',
-'PERDIERON LA TARJETA']
+['KIOSCO DUDOSO',-600,-300],
+['MAQUINA SE COMIO LA PLATA',-700,-400],
+['SE CAYO EL SISTEMA',-500,-300],
+['PERDIERON LA TARJETA',-700,-400],
+['AUMENTO SORPRESIVO',-600,-300],
+['BOLETO DUPLICADO',-500,-300]]
 es=0
+ea=0
+mi=0
+tr=0
+hStart=0
+hInt=0
+lastTap=0
 DC=[
 'A LA FACU',
 'AL LABURO',
@@ -131,6 +137,46 @@ CH=[
 'BAJEN POR ATRAS',
 'AGUANTEN UN POCO',
 'YA ARRANCAMOS']
+MI=[
+{n:'VOLVER A CASA',
+df:'EL BARRIO',
+fT:'LLEGARON ENTERES AL BARRIO',
+fM:'LLEGARON {N} DE {TOTAL}',
+fU:'{NOMBRE} LLEGO SOLE A CASA',
+fN:'NADIE VOLVIO HOY',
+t:[
+['CENTRO','EL BONDI SALE REPLETO',200,400],
+['ABASTO','MAS GENTE SUBE',250,450],
+['ALMAGRO','ATRAVIESAN MEDRANO',300,500],
+['PRIMERA JUNTA','TRANSBORDO',350,550],
+['FLORES','AV. RIVADAVIA',350,600],
+['EL BARRIO','ULTIMA CUADRA',200,400]]},
+{n:'A LA MARCHA',
+df:'PLAZA DE MAYO',
+fT:'LLEGARON ENTERES A LA PLAZA',
+fM:'LLEGARON {N} DE {TOTAL}',
+fU:'{NOMBRE} LLEGO SOLE A LA PLAZA',
+fN:'LA MARCHA SIGUIO SIN ELLES',
+t:[
+['PLAZA DEL BARRIO','PUNTO DE ENCUENTRO',200,400],
+['AV. PRINCIPAL','PRIMERA COMBINACION',300,500],
+['ENTRE RIOS','EL BONDI SE LLENA',350,600],
+['CONGRESO','CONCENTRACION',400,700],
+['AV. DE MAYO','LA MARCHA AVANZA',400,700],
+['PLAZA DE MAYO','CONCENTRACION FINAL',300,500]]},
+{n:'AL RECITAL',
+df:'LA SALA',
+fT:'ENTRARON ENTERES AL RECITAL',
+fM:'ENTRARON {N} DE {TOTAL}',
+fU:'{NOMBRE} VIO LA BANDA SOLE',
+fN:'LA BANDA TOCO SIN PUBLICO',
+t:[
+['EL BARRIO','SALIDA TEMPRANA',200,400],
+['SCALABRINI','TRANSBORDO',300,500],
+['AV. CORRIENTES','BONDI LLENO AL CENTRO',400,600],
+['EL BAJO','ATRAVIESAN EL BAJO',400,700],
+['AVELLANEDA','BARRIO DE LA SALA',350,600],
+['LA SALA','PUERTA DEL RECITAL',200,400]]}]
 LM=[
 [392,.35],[392,.35],
 [440,.4],[523,.55],
@@ -159,15 +205,15 @@ M=(ns,sp=120)=>ns.forEach(
 (n,i)=>setTimeout(
 _=>N(n[0],n[1]),i*sp))
 N_=()=>{
-let j=Math.random()*3|0
-let X_=[DC,DM,DL][j]
-dt=X_[Math.random()*X_.length|0]
-c=[200+(Math.random()*200|0),
-400+(Math.random()*300|0),
-700+(Math.random()*400|0)][j]
+let mt=MI[mi].t[tr]
+dt=mt[1]
+c=mt[2]+(Math.random()*
+(mt[3]-mt[2])|0)
 let kE=Math.random()*3|0
 let EX=[EP,E0,EM][kE]
-re=EX[Math.random()*EX.length|0]
+let evt=EX[Math.random()*EX.length|0]
+re=evt[0]
+ea=evt[1]+(Math.random()*(evt[2]-evt[1])|0)
 es=kE==0?1:kE==2?-1:0
 cf=CH[Math.random()*CH.length|0]
 }
@@ -209,15 +255,16 @@ g[0].padEnd(4)+'| - -',
 g[1]]
 D=()=>{
 g=G()
+let hpb=hStart?Math.floor(20*Math.min(1,(Date.now()-hStart)/1500)):0
+let hbar='['+'█'.repeat(hpb)+'·'.repeat(20-hpb)+']'
 if(m==0)s=[
 '','ROLLITO JUEGOS VOL.01','',
 ...H1,'',
 'SALDO INSUFICIENTE','',
 '─'.repeat(34),'','',
-'MANTENE PRESIONADO','',
-'PARA SUBIR AL BONDI','',
-'─'.repeat(34),'',
-'EN PC: ENTER O ESPACIO']
+'SOSTENE PARA',
+'SUBIR AL BONDI','',
+hbar]
 if(m==1)s=[
 '','LOBBY DEL BONDI','',
 '─'.repeat(34),'',
@@ -227,16 +274,22 @@ if(m==1)s=[
 'PASAJERX '+(idx+1)+'  '+
 F[p[2]][0]),'',
 '─'.repeat(34),'',
-'MANTENE PRESIONADO',
-'PARA SUMARSE','',
-'SI NO SE SUMA NADIE MAS',
+'SOSTENE PARA SUMARSE','',
+'DOBLE TOQUE PARA QUITAR','',
+hbar,'',
+'SI NADIE MAS SE SUMA',
 'ARRANCA EL BONDI']
 if(m==2)s=[
 k?'SUBIERON A':'',
 '',...R(),'',
 '─'.repeat(34),'',
-'‹ VIAJE '+l+' ›',
-'VAN '+dt,'',
+'MISION: '+MI[mi].n,
+'DESTINO: '+MI[mi].df,
+'─'.repeat(34),'',
+'‹ TRAMO '+(tr+1)+' DE '+
+MI[mi].t.length+' ›',
+'EN '+MI[mi].t[tr][0],
+dt,'',
 '─'.repeat(34),'',
 '«PASAJERX '+A[i][0]+
 ' / '+A.length+'»','',
@@ -268,14 +321,30 @@ bar,'',
 hit?'':'[ TOCAR / TECLA ]']
 }
 if(m==4)s=r
-if(m==5)s=[
-'ULTIMX CON SALDO','',
-'GANASTE','',
-'PASAJERX '+A[0][0],'',
+if(m==5){
+let sv=A.length,ini=P.length
+let head=
+sv==0?MI[mi].fN:
+sv==1?MI[mi].fU.replace(
+'{NOMBRE}','PASAJERX '+A[0][0]):
+sv<ini?MI[mi].fM.replace(
+'{N}',sv).replace(
+'{TOTAL}',ini):MI[mi].fT
+let body=[]
+if(sv==1)body=['',
 J[A[0][2]][wp%4],'',
-'SALDO FINAL',
-$(A[0][1]),'',
-'TOQUE REINICIA']
+'SALDO FINAL',$(A[0][1])]
+else if(sv>1)A.forEach(
+p=>body.push('PASAJERX '+
+p[0]+'  '+F[p[2]][0]))
+s=[
+head,'',
+...body,'',
+'─'.repeat(34),'',
+'MISION: '+MI[mi].n,
+'DESTINO: '+MI[mi].df,
+'','TOQUE REINICIA']
+}
 if(m==6){
 let P_='▓'.repeat(p)+
 ' '.repeat(38-p*2)+
@@ -285,6 +354,7 @@ s=p>=18?[
 '','RECARGANDO SUBE','',
 re,'',
 es>0?':-)':es<0?':-(':' ','',
+(ea>0?'+':'')+$(ea),'',
 q?'TOQUE PARA SUBIR':'','',
 ...Array(2).fill(P_)]:
 Array(12).fill(P_)
@@ -318,7 +388,8 @@ zM,'',
 'ANTERIOR '+$(v[1]),
 'BOLETO '+$(f),
 'LIMITE -$ 1200.00','',
-'BAJATE PASAJERX '+v[0],
+'PASAJERX '+v[0]+' SE BAJA',
+'EN '+MI[mi].t[tr][0],
 'QUEDAN '+(A.length-1),'',
 A.length<3?'FIN':'TRANSBORDO'
 ]:u?[
@@ -344,6 +415,8 @@ m=4
 D()
 }
 LP=()=>{
+if(hInt){clearInterval(hInt);hInt=0}
+hStart=0
 let pri=!ac
 if(pri){
 ac=new(AudioContext||
@@ -361,7 +434,7 @@ P.length%F.length])
 if(m==0)m=1
 D()
 if(h)clearTimeout(h)
-h=setTimeout(S,2500)
+h=setTimeout(S,3500)
 }
 T=()=>{
 let pri=!ac
@@ -426,37 +499,42 @@ hit==1?650:hit==2?420:520)
 return
 }
 if(m==4){
-if(A.length<2){
+if(A.length==0){
 m=5
 M(LMV,280)
 wp=0
 y=setInterval(_=>{
 wp++;D()},250)
 }
-else{
-if(r.includes('TRANSBORDO')){
+else if(r.includes('TRANSBORDO')||
+A.length==1){
+if(tr+1>=MI[mi].t.length){
+m=5
+M(LMV,280)
+wp=0
+y=setInterval(_=>{
+wp++;D()},250)
+}else{
 N(220,.25,'sawtooth')
 setTimeout(_=>M(
 [[330,.1],[440,.15]],120),300)
 b=(b+1+(Math.random()*
 (B.length-1)|0))%B.length
+tr++
 N_()
-A.forEach(p=>p[1]+=
-es?es*(200+(Math.random()*400|0)):
-(Math.random()*400|0)-200)
+A.forEach(p=>p[1]+=ea)
 l++
 k=1
 i%=A.length
 return Z(2)
 }
-m=2
 }
+else m=2
 D();return
 }
 if(y)clearInterval(y)
 m=0
 b=Math.random()*B.length|0
-N_()
 i=0
 l=1
 P=A=[]
@@ -488,31 +566,69 @@ clearInterval(y);m=n;D()
 }
 S=()=>{
 if(m==1&&P.length>1){
-A=P.slice();k=1;Z(2)
+A=P.slice();k=1
+mi=Math.random()*MI.length|0
+tr=0
+N_()
+Z(2)
 }
+}
+RM=()=>{
+if(P.length){
+P.pop()
+N(440,.05,'sawtooth',.04)
+setTimeout(_=>N(330,.05,
+'sawtooth',.04),60)
+}
+if(P.length==0)m=0
+if(h)clearTimeout(h)
+D()
+}
+HS=()=>{
+if(hStart)return
+hStart=Date.now()
+lT=setTimeout(LP,1500)
+hInt=setInterval(D,50)
+D()
+}
+HC=()=>{
+if(lT){clearTimeout(lT);lT=0}
+if(hInt){clearInterval(hInt);hInt=0}
+if(hStart){hStart=0;m<2&&D()}
 }
 onpointerdown=()=>{
-if(m<2){
-pT=Date.now()
-lT=setTimeout(LP,600)
-return
+if(m==1){
+let nw=Date.now()
+if(lastTap&&
+nw-lastTap<350){
+lastTap=0
+return RM()
 }
-T()
+lastTap=nw
 }
-onpointerup=()=>{
-if(lT){clearTimeout(lT);lT=0}
-pT=0
+m<2?HS():T()
 }
-onpointercancel=()=>{
-if(lT){clearTimeout(lT);lT=0}
-pT=0
-}
+onpointerup=HC
+onpointercancel=HC
 onkeydown=e=>{
+if(e.repeat)return
+if(m==1&&
+e.key=='Backspace')
+return RM()
 if(m==1&&e.key=='Enter'
 &&P.length>1)return S()
-m<2?LP():T()
+if(m==1){
+let nw=Date.now()
+if(lastTap&&
+nw-lastTap<350){
+lastTap=0
+return RM()
 }
+lastTap=nw
+}
+m<2?HS():T()
+}
+onkeyup=HC
 b=Math.random()*B.length|0
-N_()
 D()
 </script>
