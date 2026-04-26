@@ -107,6 +107,7 @@ tr=0
 hStart=0
 hInt=0
 lastTap=0
+FA=[]
 DC=[
 'A LA FACU',
 'AL LABURO',
@@ -323,23 +324,35 @@ hit?'':'[ TOCAR / TECLA ]']
 if(m==4)s=r
 if(m==5){
 let sv=A.length,ini=P.length
-let head=
+let raw=
 sv==0?MI[mi].fN:
 sv==1?MI[mi].fU.replace(
 '{NOMBRE}','PASAJERX '+A[0][0]):
 sv<ini?MI[mi].fM.replace(
 '{N}',sv).replace(
 '{TOTAL}',ini):MI[mi].fT
+let head='‹ '+raw+' ›'
 let body=[]
 if(sv==1)body=['',
 J[A[0][2]][wp%4],'',
 'SALDO FINAL',$(A[0][1])]
-else if(sv>1)A.forEach(
-p=>body.push('PASAJERX '+
-p[0]+'  '+F[p[2]][0]))
+else if(sv>1){
+body.push('LLEGARON:')
+A.forEach(p=>body.push(
+'  PASAJERX '+p[0]+'  '+
+F[p[2]][0]))
+}
+let tail=[]
+if(FA.length){
+tail.push('QUEDARON EN EL CAMINO:')
+FA.forEach(f=>tail.push(
+'  PASAJERX '+f[0]+
+' EN '+f[1]))
+}
 s=[
 head,'',
 ...body,'',
+...tail,'',
 '─'.repeat(34),'',
 'MISION: '+MI[mi].n,
 'DESTINO: '+MI[mi].df,
@@ -408,6 +421,7 @@ zM,'',
 'SALDO '+$(s),
 '','PASE EL CELULAR']
 if(e){
+FA.push([v[0],MI[mi].t[tr][0],v[2]])
 A.splice(i,1)
 if(A.length)i%=A.length
 }else{v[1]=s;i=n}
@@ -567,6 +581,7 @@ clearInterval(y);m=n;D()
 S=()=>{
 if(m==1&&P.length>1){
 A=P.slice();k=1
+FA=[]
 mi=Math.random()*MI.length|0
 tr=0
 N_()
