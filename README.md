@@ -70,3 +70,6 @@ El juego utiliza el teléfono móvil como un objeto físico que debe circular de
 ## Agradecimientos
 
 - **Dante Bellini** ([@dantemepe](https://github.com/dantemepe)) — por el aporte conceptual y de diseño al fanzine.
+## License
+
+MIT License — © 2026 [Vladimiro Bellini](https://github.com/vlasvlasvlas). Free to use and modify, attribution required.
